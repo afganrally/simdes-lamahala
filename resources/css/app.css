@@ -1,0 +1,134 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Custom color palette for the application */
+    --color-primary-50: #FFF8F0;
+    --color-primary-100: #FFFD8F;
+    --color-primary-200: #B0CE88;
+    --color-primary-300: #4C763B;
+    --color-primary-400: #043915;
+    --color-primary-500: #043915;
+    --color-primary-600: #043915;
+    --color-primary-700: #043915;
+    --color-primary-800: #043915;
+    --color-primary-900: #043915;
+    --color-primary-950: #043915;
+
+    /* Secondary color (light blue) */
+    --color-secondary-50: #F0F9FC;
+    --color-secondary-100: #E0F2FE;
+    --color-secondary-200: #BAE6FD;
+    --color-secondary-300: #7DD3FC;
+    --color-secondary-400: #38BDF8;
+    --color-secondary-500: #ABE0F0;
+    --color-secondary-600: #0EA5E9;
+    --color-secondary-700: #0284C7;
+    --color-secondary-800: #0369A1;
+    --color-secondary-900: #075985;
+    --color-secondary-950: #0C4A6E;
+}
+
+/* Custom styles for cleaner design */
+@layer base {
+    * {
+        @apply border-neutral-200 dark:border-neutral-700;
+    }
+
+    body {
+        @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors duration-300;
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar {
+        @apply w-2;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-neutral-100 dark:bg-neutral-800;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-neutral-300 dark:bg-neutral-600 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-neutral-400 dark:bg-neutral-500;
+    }
+}
+
+@layer components {
+    /* Clean card component */
+    .card {
+        @apply bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 transition-all duration-200;
+    }
+
+    .card:hover {
+        @apply shadow-md scale-[1.01];
+    }
+
+    /* Clean button component */
+    .btn-primary {
+        @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary-500 hover:bg-primary-600 text-white focus:ring-primary-500;
+    }
+
+    .btn-secondary {
+        @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-secondary-100 hover:bg-secondary-200 text-secondary-800 dark:bg-secondary-800 dark:hover:bg-secondary-700 dark:text-secondary-100 focus:ring-secondary-500;
+    }
+
+    .btn-ghost {
+        @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 focus:ring-gray-500;
+    }
+
+    /* Clean input component */
+    .input {
+        @apply w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200;
+    }
+
+    /* Clean sidebar component */
+    .sidebar {
+        @apply bg-gray-900 dark:bg-gray-950 border-r border-gray-800 dark:border-gray-900;
+    }
+
+    .sidebar-item {
+        @apply flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200;
+    }
+
+    .sidebar-item-active {
+        @apply bg-primary-500 text-white;
+    }
+
+    .sidebar-item-inactive {
+        @apply text-gray-300 dark:text-gray-400 hover:bg-gray-800 dark:hover:bg-gray-900 hover:text-white;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    /* Animation utilities */
+    .animate-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .slide-up {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .slide-down {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .scale-in {
+        animation: scaleIn 0.2s ease-out;
+    }
+}

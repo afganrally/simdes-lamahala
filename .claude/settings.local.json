@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require:*)",
+      "Bash(php artisan make:livewire:*)",
+      "Bash(php artisan route:list:*)",
+      "Bash(del:*)",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan migrate:*)",
+      "Bash(php artisan make:model:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(php artisan livewire:configure-s3-upload-cleanup:*)",
+      "Bash(php artisan cache:clear:*)",
+      "Bash(php artisan view:clear:*)",
+      "Bash(php artisan config:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php artisan log:clear:*)",
+      "Bash(php artisan serve:*)",
+      "Bash(start:*)",
+      "Bash(php:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}
