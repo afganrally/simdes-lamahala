@@ -189,7 +189,10 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Judul -->
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <label class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
                                     Judul Artikel <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" wire:model="judul" class="input w-full"
@@ -201,7 +204,10 @@
 
                             <!-- Penulis -->
                             <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <label class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
                                     Penulis <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" wire:model="penulis" class="input w-full"
@@ -213,7 +219,10 @@
 
                             <!-- Tanggal -->
                             <div>
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <label class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
                                     Tanggal <span class="text-red-500">*</span>
                                 </label>
                                 <input type="date" wire:model="tanggal" class="input w-full">
@@ -224,7 +233,10 @@
 
                             <!-- Gambar -->
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <label class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
                                     Gambar Artikel
                                 </label>
                                 <input type="file" wire:model="gambar" class="input w-full" accept="image/*">
@@ -241,7 +253,10 @@
 
                             <!-- Isi -->
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <label class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
                                     Isi Artikel <span class="text-red-500">*</span>
                                 </label>
                                 <textarea wire:model="isi" rows="10" class="input w-full" placeholder="Tulis konten artikel di sini..."></textarea>

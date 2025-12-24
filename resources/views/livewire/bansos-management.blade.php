@@ -5,7 +5,7 @@
         <p class="text-neutral-600 dark:text-neutral-400 mt-2">Kelola data bantuan sosial untuk masyarakat</p>
     </div>
 
-  
+
     <!-- Search and Actions -->
     <div class="card mb-6">
         <div class="p-6">
@@ -163,7 +163,10 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Jenis -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
                                 Jenis Bantuan <span class="text-red-500">*</span>
                             </label>
                             <input type="text" wire:model="jenis"
@@ -175,7 +178,10 @@
 
                         <!-- Kategori -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
                                 Kategori <span class="text-red-500">*</span>
                             </label>
                             <input type="text" wire:model="kategori"
@@ -187,7 +193,10 @@
 
                         <!-- Jumlah -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                                 Jumlah (Rp) <span class="text-red-500">*</span>
                             </label>
                             <input type="number" wire:model="jumlah" step="0.01"
@@ -199,7 +208,10 @@
 
                         <!-- Tanggal Penyaluran -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
                                 Tanggal Penyaluran <span class="text-red-500">*</span>
                             </label>
                             <input type="date" wire:model="tanggal_penyaluran"
@@ -211,7 +223,10 @@
 
                         <!-- Sumber Dana -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
                                 Sumber Dana <span class="text-red-500">*</span>
                             </label>
                             <input type="text" wire:model="sumber_dana"
@@ -223,7 +238,10 @@
 
                         <!-- Periode -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                                 Periode <span class="text-red-500">*</span>
                             </label>
                             <input type="text" wire:model="periode"
@@ -235,7 +253,10 @@
 
                         <!-- Status Penerima -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                                 Status Penerima <span class="text-red-500">*</span>
                             </label>
                             <select wire:model="status_penerima" class="input w-full">
@@ -252,7 +273,10 @@
 
                         <!-- Penerima -->
                         <div>
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
                                 Penerima <span class="text-red-500">*</span>
                             </label>
                             <select wire:model="id_penduduk" class="input w-full">
@@ -268,7 +292,10 @@
 
                         <!-- Foto Dokumen -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
                                 Foto Dokumen
                             </label>
                             <input type="file" wire:model="foto_dokumen"
@@ -280,7 +307,10 @@
 
                         <!-- Keterangan -->
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                            <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
                                 Keterangan
                             </label>
                             <textarea wire:model="keterangan" rows="3"
@@ -294,11 +324,11 @@
                     <!-- Footer Actions -->
                     <div class="mt-6 flex gap-3">
                         <button type="button" wire:click="closeModal"
-                            class="flex-1 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-300 font-medium rounded-lg transition-colors">
+                            class="flex-1 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-300 font-medium rounded-lg transition-colors cursor-pointer">
                             Batal
                         </button>
                         <button type="submit"
-                            class="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg transition-all">
+                            class="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg transition-all cursor-pointer">
                             {{ $bansos_id ? 'Update' : 'Simpan' }}
                         </button>
                     </div>
