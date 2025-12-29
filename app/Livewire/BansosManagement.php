@@ -43,14 +43,32 @@ class BansosManagement extends Component
 
         $penduduks = Penduduk::all();
 
+        // Get current user permissions
+        $currentUser = auth()->user();
+        $canCreate = $currentUser->hasPermission('create_bansos');
+        $canEdit = $currentUser->hasPermission('edit_bansos');
+        $canDelete = $currentUser->hasPermission('delete_bansos');
+
         return view('livewire.bansos-management', [
             'bansos' => $bansos,
-            'penduduks' => $penduduks
+            'penduduks' => $penduduks,
+            'canCreate' => $canCreate,
+            'canEdit' => $canEdit,
+            'canDelete' => $canDelete,
         ]);
     }
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('create_bansos')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data bansos.'
+            ]);
+            return;
+        }
+
         $this->resetInputFields();
         $this->openModal();
     }
@@ -84,6 +102,15 @@ class BansosManagement extends Component
 
     public function store()
     {
+        if (!auth()->user()->hasPermission('create_bansos')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data bansos.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         $data = [
@@ -106,13 +133,22 @@ class BansosManagement extends Component
         Bansos::updateOrCreate(['id' => $this->bansos_id], $data);
 
         $message = $this->bansos_id ? 'Data Bansos berhasil diperbarui!' : 'Data Bansos berhasil ditambahkan!';
-        $this->dispatchBrowserEvent('success', ['message' => $message]);
+        $this->dispatch('success', ['message' => $message]);
 
         $this->closeModal();
     }
 
     public function edit($id)
     {
+        if (!auth()->user()->hasPermission('edit_bansos')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit data bansos.'
+            ]);
+            return;
+        }
+
         $bansos = Bansos::findOrFail($id);
         $this->bansos_id = $id;
         $this->jenis = $bansos->jenis;
@@ -130,12 +166,21 @@ class BansosManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->hasPermission('delete_bansos')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menghapus data bansos.'
+            ]);
+            return;
+        }
+
         $bansos = Bansos::findOrFail($id);
         if ($bansos->foto_dokumen) {
             \Storage::disk('public')->delete($bansos->foto_dokumen);
         }
         $bansos->delete();
 
-        $this->dispatchBrowserEvent('success', ['message' => 'Data Bansos berhasil dihapus!']);
+        $this->dispatch('success', ['message' => 'Data Bansos berhasil dihapus!']);
     }
 }

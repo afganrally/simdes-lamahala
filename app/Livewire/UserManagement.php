@@ -27,7 +27,7 @@ class UserManagement extends Component
         'name' => 'required|string|max:255',
         'username' => 'required|string|max:255|unique:users',
         'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:admin,user',
+        'role' => 'required|in:admin,operator',
     ];
 
     public function render()
@@ -43,17 +43,35 @@ class UserManagement extends Component
         $totalRegularUsers = User::where('role', 'user')->count();
         $activeThisMonth = User::where('updated_at', '>=', now()->subMonth())->count();
 
+        // Get current user permissions
+        $currentUser = auth()->user();
+        $canCreate = $currentUser->hasPermission('create_users');
+        $canEdit = $currentUser->hasPermission('edit_users');
+        $canDelete = $currentUser->hasPermission('delete_users');
+
         return view('livewire.user-management', [
             'users' => $users,
             'totalUsers' => $totalUsers,
             'totalAdmins' => $totalAdmins,
             'totalRegularUsers' => $totalRegularUsers,
-            'activeThisMonth' => $activeThisMonth
+            'activeThisMonth' => $activeThisMonth,
+            'canCreate' => $canCreate,
+            'canEdit' => $canEdit,
+            'canDelete' => $canDelete,
         ]);
     }
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('create_users')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah pengguna.'
+            ]);
+            return;
+        }
+
         $this->resetInputFields();
         $this->isEdit = false;
         $this->isOpen = true;
@@ -61,6 +79,15 @@ class UserManagement extends Component
 
     public function store()
     {
+        if (!auth()->user()->hasPermission('create_users')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah pengguna.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         User::create([
@@ -76,6 +103,15 @@ class UserManagement extends Component
 
     public function edit($id)
     {
+        if (!auth()->user()->hasPermission('edit_users')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit pengguna.'
+            ]);
+            return;
+        }
+
         $user = User::findOrFail($id);
         $this->user_id = $id;
         $this->name = $user->name;
@@ -89,6 +125,15 @@ class UserManagement extends Component
 
     public function update()
     {
+        if (!auth()->user()->hasPermission('edit_users')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit pengguna.'
+            ]);
+            return;
+        }
+
         $rules = [
             'name' => 'required|string|max:255',
             'username' => [
@@ -97,7 +142,7 @@ class UserManagement extends Component
                 'max:255',
                 Rule::unique('users')->ignore($this->user_id),
             ],
-            'role' => 'required|in:admin,user',
+            'role' => 'required|in:admin,operator',
         ];
 
         if ($this->password) {
@@ -125,6 +170,15 @@ class UserManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->hasPermission('delete_users')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menghapus pengguna.'
+            ]);
+            return;
+        }
+
         if (auth()->user()->id === $id) {
             $this->dispatch('sweetAlert', [
                 'type' => 'error',

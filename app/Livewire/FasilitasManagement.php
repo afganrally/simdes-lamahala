@@ -59,6 +59,15 @@ class FasilitasManagement extends Component
 
     public function openModal()
     {
+        if (!auth()->user()->hasPermission('create_fasilitas')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data fasilitas.'
+            ]);
+            return;
+        }
+
         $this->resetForm();
         $this->isOpen = true;
     }
@@ -72,6 +81,15 @@ class FasilitasManagement extends Component
 
     public function store()
     {
+        if (!auth()->user()->hasPermission('create_fasilitas')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data fasilitas.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         $gambarPath = null;
@@ -97,6 +115,15 @@ class FasilitasManagement extends Component
 
     public function edit($id)
     {
+        if (!auth()->user()->hasPermission('edit_fasilitas')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit data fasilitas.'
+            ]);
+            return;
+        }
+
         $this->isEdit = true;
         $this->fasilitasId = $id;
         $this->fasilitas = Fasilitas::findOrFail($id);
@@ -115,6 +142,15 @@ class FasilitasManagement extends Component
 
     public function update()
     {
+        if (!auth()->user()->hasPermission('edit_fasilitas')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit data fasilitas.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         $fasilitas = Fasilitas::findOrFail($this->fasilitasId);
@@ -145,6 +181,15 @@ class FasilitasManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->hasPermission('delete_fasilitas')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menghapus data fasilitas.'
+            ]);
+            return;
+        }
+
         $fasilitas = Fasilitas::findOrFail($id);
 
         // Delete image if exists
@@ -176,7 +221,7 @@ class FasilitasManagement extends Component
 
     public function render()
     {
-        
+
         // Get statistics
         $totalFasilitas = Fasilitas::count();
         $kondisiBaik = Fasilitas::where('kondisi', 'baik')->count();
@@ -197,6 +242,12 @@ class FasilitasManagement extends Component
 
         $fasilitas = $query->latest()->paginate($this->perPage);
 
+        // Get current user permissions
+        $currentUser = auth()->user();
+        $canCreate = $currentUser->hasPermission('create_fasilitas');
+        $canEdit = $currentUser->hasPermission('edit_fasilitas');
+        $canDelete = $currentUser->hasPermission('delete_fasilitas');
+
         // Debug
         logger("Fasilitas count: " . $fasilitas->count());
         logger("Fasilitas items: " . json_encode($fasilitas->pluck('nama')));
@@ -207,7 +258,10 @@ class FasilitasManagement extends Component
             'totalFasilitas' => $totalFasilitas,
             'kondisiBaik' => $kondisiBaik,
             'perluMaintenance' => $perluMaintenance,
-            'rusak' => $rusak
+            'rusak' => $rusak,
+            'canCreate' => $canCreate,
+            'canEdit' => $canEdit,
+            'canDelete' => $canDelete,
         ]);
     }
 }

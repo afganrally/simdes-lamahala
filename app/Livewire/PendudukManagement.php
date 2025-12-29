@@ -65,12 +65,21 @@ class PendudukManagement extends Component
             $totalLaki = Penduduk::where('jenis_kelamin', 'L')->count();
             $totalPerempuan = Penduduk::where('jenis_kelamin', 'P')->count();
 
+            // Get current user permissions
+            $currentUser = auth()->user();
+            $canCreate = $currentUser->hasPermission('create_penduduks');
+            $canEdit = $currentUser->hasPermission('edit_penduduks');
+            $canDelete = $currentUser->hasPermission('delete_penduduks');
+
             return view('livewire.penduduk-management', [
                 'penduduks' => $penduduks,
                 'totalPenduduk' => $totalPenduduk,
                 'statusTetap' => $statusTetap,
                 'totalLaki' => $totalLaki,
-                'totalPerempuan' => $totalPerempuan
+                'totalPerempuan' => $totalPerempuan,
+                'canCreate' => $canCreate,
+                'canEdit' => $canEdit,
+                'canDelete' => $canDelete,
             ]);
         } catch (\Exception $e) {
             \Log::error('Error in PendudukManagement: ' . $e->getMessage());
@@ -80,6 +89,15 @@ class PendudukManagement extends Component
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('create_penduduks')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data penduduk.'
+            ]);
+            return;
+        }
+
         $this->resetInputFields();
         $this->isEdit = false;
         $this->isOpen = true;
@@ -87,6 +105,15 @@ class PendudukManagement extends Component
 
     public function store()
     {
+        if (!auth()->user()->hasPermission('create_penduduks')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah data penduduk.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         Penduduk::create([
@@ -116,6 +143,15 @@ class PendudukManagement extends Component
 
     public function edit($id)
     {
+        if (!auth()->user()->hasPermission('edit_penduduks')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit data penduduk.'
+            ]);
+            return;
+        }
+
         $penduduk = Penduduk::findOrFail($id);
         $this->penduduk_id = $id;
         $this->nik = $penduduk->nik;
@@ -142,6 +178,15 @@ class PendudukManagement extends Component
 
     public function update()
     {
+        if (!auth()->user()->hasPermission('edit_penduduks')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit data penduduk.'
+            ]);
+            return;
+        }
+
         $rules = [
             'nik' => 'required|string|max:16|unique:penduduks,nik,'.$this->penduduk_id,
             'nama' => 'required|string|max:255',
@@ -193,6 +238,15 @@ class PendudukManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->hasPermission('delete_penduduks')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menghapus data penduduk.'
+            ]);
+            return;
+        }
+
         $penduduk = Penduduk::findOrFail($id);
         $penduduk->delete();
         // Dispatch SweetAlert success

@@ -34,13 +34,31 @@ class ArtikelManagement extends Component
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
 
+        // Get current user permissions
+        $currentUser = auth()->user();
+        $canCreate = $currentUser->hasPermission('create_artikels');
+        $canEdit = $currentUser->hasPermission('edit_artikels');
+        $canDelete = $currentUser->hasPermission('delete_artikels');
+
         return view('livewire.artikel-management', [
-            'artikels' => $artikels
+            'artikels' => $artikels,
+            'canCreate' => $canCreate,
+            'canEdit' => $canEdit,
+            'canDelete' => $canDelete,
         ]);
     }
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('create_artikels')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah artikel.'
+            ]);
+            return;
+        }
+
         $this->resetInputFields();
         $this->openModal();
     }
@@ -69,6 +87,15 @@ class ArtikelManagement extends Component
 
     public function store()
     {
+        if (!auth()->user()->hasPermission('create_artikels')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menambah artikel.'
+            ]);
+            return;
+        }
+
         $this->validate();
 
         $data = [
@@ -86,13 +113,22 @@ class ArtikelManagement extends Component
         Artikel::updateOrCreate(['id' => $this->artikel_id], $data);
 
         $message = $this->artikel_id ? 'Artikel berhasil diperbarui!' : 'Artikel berhasil ditambahkan!';
-        $this->dispatchBrowserEvent('success', ['message' => $message]);
+        $this->dispatch('success', ['message' => $message]);
 
         $this->closeModal();
     }
 
     public function edit($id)
     {
+        if (!auth()->user()->hasPermission('edit_artikels')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk mengedit artikel.'
+            ]);
+            return;
+        }
+
         $artikel = Artikel::findOrFail($id);
         $this->artikel_id = $id;
         $this->judul = $artikel->judul;
@@ -105,12 +141,21 @@ class ArtikelManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->hasPermission('delete_artikels')) {
+            $this->dispatch('sweetAlert', [
+                'type' => 'error',
+                'title' => 'Akses Ditolak',
+                'text' => 'Anda tidak memiliki izin untuk menghapus artikel.'
+            ]);
+            return;
+        }
+
         $artikel = Artikel::findOrFail($id);
         if ($artikel->gambar) {
             \Storage::disk('public')->delete($artikel->gambar);
         }
         $artikel->delete();
 
-        $this->dispatchBrowserEvent('success', ['message' => 'Artikel berhasil dihapus!']);
+        $this->dispatch('success', ['message' => 'Artikel berhasil dihapus!']);
     }
 }

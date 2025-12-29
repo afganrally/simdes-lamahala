@@ -22,12 +22,14 @@
                         </div>
                     </div>
                 </div>
+                @if ($canCreate)
                 <button wire:click="create" class="btn btn-primary flex items-center justify-between cursor-pointer">
                     <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Tambah Artikel
                 </button>
+                @endif
             </div>
         </div>
     </div>
@@ -90,6 +92,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
+                                    @if ($canEdit)
                                     <button wire:click="edit({{ $item->id }})"
                                         class="text-warning-600 hover:text-warning-900 dark:text-warning-400 dark:hover:text-warning-300"
                                         title="Edit">
@@ -99,6 +102,8 @@
                                             </path>
                                         </svg>
                                     </button>
+                                    @endif
+                                    @if ($canDelete)
                                     <button onclick="deleteArtikel({{ $item->id }})"
                                         class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                                         title="Hapus">
@@ -108,6 +113,7 @@
                                             </path>
                                         </svg>
                                     </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -124,9 +130,11 @@
                                     artikel</h3>
                                 <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Tambahkan artikel pertama
                                     untuk memulai.</p>
-                                <div class="mt-6">
-                                    <button wire:click="create" class="btn btn-primary">Tambah Artikel</button>
-                                </div>
+                                @if ($canCreate)
+                                    <div class="mt-6">
+                                        <button wire:click="create" class="btn btn-primary">Tambah Artikel</button>
+                                    </div>
+                                @endif
                             </td>
                         </tr>
                     @endforelse
