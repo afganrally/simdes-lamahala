@@ -68,6 +68,9 @@ Route::middleware('auth')->group(function () {
         return view('artikels-index');
     })->name('artikels.index');
 
+    // WYSIWYG editor image upload
+    Route::post('/wysiwyg/upload-image', [\App\Http\Controllers\WysiwygController::class, 'uploadImage'])->name('wysiwyg.upload-image');
+
     Route::post('/logout', function (Request $request) {
         auth()->logout();
         $request->session()->invalidate();

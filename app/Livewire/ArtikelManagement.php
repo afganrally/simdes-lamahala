@@ -4,32 +4,29 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Models\Artikel;
+use Carbon\Carbon;
 
 class ArtikelManagement extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination;
 
-    public $artikel_id, $judul, $isi, $penulis, $tanggal, $gambar;
+    public $artikel_id, $judul, $isi;
     public $search = '';
     public $isOpen = false;
 
     protected $rules = [
         'judul' => 'required|string|max:255',
         'isi' => 'required|string',
-        'penulis' => 'required|string|max:255',
-        'tanggal' => 'required|date',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
     ];
 
     public function render()
     {
         $artikels = Artikel::with(['user'])
-            ->where(function($query) {
-                $query->where('judul', 'like', '%'.$this->search.'%')
-                      ->orWhere('penulis', 'like', '%'.$this->search.'%')
-                      ->orWhere('isi', 'like', '%'.$this->search.'%');
+            ->where(function ($query) {
+                $query->where('judul', 'like', '%' . $this->search . '%')
+                    ->orWhere('penulis', 'like', '%' . $this->search . '%')
+                    ->orWhere('isi', 'like', '%' . $this->search . '%');
             })
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
@@ -66,6 +63,7 @@ class ArtikelManagement extends Component
     public function openModal()
     {
         $this->isOpen = true;
+        $this->dispatch('wysiwyg-editor-init');
     }
 
     public function closeModal()
@@ -79,9 +77,6 @@ class ArtikelManagement extends Component
         $this->artikel_id = '';
         $this->judul = '';
         $this->isi = '';
-        $this->penulis = '';
-        $this->tanggal = '';
-        $this->gambar = null;
         $this->resetErrorBag();
     }
 
@@ -101,14 +96,10 @@ class ArtikelManagement extends Component
         $data = [
             'judul' => $this->judul,
             'isi' => $this->isi,
-            'penulis' => $this->penulis,
-            'tanggal' => $this->tanggal,
+            'penulis' => auth()->user()->name,
+            'tanggal' => Carbon::now()->toDateString(),
             'id_user' => auth()->user()->id
         ];
-
-        if ($this->gambar) {
-            $data['gambar'] = $this->gambar->store('artikel-images', 'public');
-        }
 
         Artikel::updateOrCreate(['id' => $this->artikel_id], $data);
 
@@ -133,10 +124,11 @@ class ArtikelManagement extends Component
         $this->artikel_id = $id;
         $this->judul = $artikel->judul;
         $this->isi = $artikel->isi;
-        $this->penulis = $artikel->penulis;
-        $this->tanggal = $artikel->tanggal;
 
         $this->openModal();
+
+        // Dispatch event to update WYSIWYG editor content after modal opens
+        $this->dispatch('wysiwyg-editor-update', ['content' => $this->isi]);
     }
 
     public function delete($id)
@@ -151,9 +143,6 @@ class ArtikelManagement extends Component
         }
 
         $artikel = Artikel::findOrFail($id);
-        if ($artikel->gambar) {
-            \Storage::disk('public')->delete($artikel->gambar);
-        }
         $artikel->delete();
 
         $this->dispatch('success', ['message' => 'Artikel berhasil dihapus!']);

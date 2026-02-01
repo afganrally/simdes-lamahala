@@ -19,7 +19,11 @@
       "Bash(php artisan serve:*)",
       "Bash(start:*)",
       "Bash(php:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(composer dump-autoload:*)"
     ]
   }
 }

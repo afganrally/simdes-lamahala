@@ -1,0 +1,543 @@
+/* ============================================
+   Markdown Editor Container
+   ============================================ */
+
+.markdown-editor-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.markdown-editor-container {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: white;
+    transition: border-color 0.2s;
+}
+
+.dark .markdown-editor-container {
+    border-color: #374151;
+    background: #1f2937;
+}
+
+.markdown-editor-container:focus-within {
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+/* ============================================
+   Toolbar
+   ============================================ */
+
+.markdown-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    align-items: center;
+}
+
+.dark .markdown-toolbar {
+    background: #111827;
+    border-bottom-color: #374151;
+}
+
+.markdown-toolbar-group {
+    display: flex;
+    gap: 0.125rem;
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+    border-right: 1px solid #e5e7eb;
+}
+
+.markdown-toolbar-group:last-child {
+    border-right: none;
+}
+
+.dark .markdown-toolbar-group {
+    border-right-color: #374151;
+}
+
+.markdown-toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dark .markdown-toolbar-btn {
+    color: #d1d5db;
+}
+
+.markdown-toolbar-btn:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.dark .markdown-toolbar-btn:hover {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.markdown-toolbar-btn:active {
+    background: #d1d5db;
+    transform: scale(0.95);
+}
+
+.dark .markdown-toolbar-btn:active {
+    background: #4b5563;
+}
+
+.markdown-toolbar-btn svg {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.markdown-toolbar-btn.dropdown {
+    padding-right: 0.5rem;
+    gap: 0.25rem;
+}
+
+.markdown-toolbar-btn.dropdown::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.25rem solid currentColor;
+}
+
+.markdown-toolbar-separator {
+    width: 1px;
+    height: 1.5rem;
+    background: #e5e7eb;
+    margin: 0 0.25rem;
+}
+
+.dark .markdown-toolbar-separator {
+    background: #374151;
+}
+
+/* ============================================
+   Editor Panels (Two-Panel Layout)
+   ============================================ */
+
+.markdown-editor-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 400px;
+    max-height: 600px;
+}
+
+@media (max-width: 768px) {
+    .markdown-editor-panels {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        max-height: 800px;
+    }
+}
+
+/* ============================================
+   Editor Panel (Left)
+   ============================================ */
+
+.markdown-editor-panel {
+    position: relative;
+    border-right: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.dark .markdown-editor-panel {
+    border-right-color: #374151;
+}
+
+@media (max-width: 768px) {
+    .markdown-editor-panel {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dark .markdown-editor-panel {
+        border-bottom-color: #374151;
+    }
+}
+
+.markdown-textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    padding: 1rem;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Monaco', 'Courier New', 'Menlo', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #111827;
+    background: #ffffff;
+}
+
+.dark .markdown-textarea {
+    color: #f9fafb;
+    background: #1f2937;
+}
+
+.markdown-textarea::placeholder {
+    color: #9ca3af;
+}
+
+.dark .markdown-textarea::placeholder {
+    color: #6b7280;
+}
+
+/* ============================================
+   Preview Panel (Right)
+   ============================================ */
+
+.markdown-preview-panel {
+    overflow: auto;
+    background: #ffffff;
+}
+
+.dark .markdown-preview-panel {
+    background: #1f2937;
+}
+
+.markdown-preview-content {
+    padding: 1rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: #374151;
+    word-wrap: break-word;
+}
+
+.dark .markdown-preview-content {
+    color: #e5e7eb;
+}
+
+/* ============================================
+   Preview Content Styling
+   ============================================ */
+
+/* Headings */
+.markdown-preview-content h1,
+.markdown-preview-content h2,
+.markdown-preview-content h3,
+.markdown-preview-content h4,
+.markdown-preview-content h5,
+.markdown-preview-content h6 {
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.dark .markdown-preview-content h1,
+.dark .markdown-preview-content h2,
+.dark .markdown-preview-content h3,
+.dark .markdown-preview-content h4,
+.dark .markdown-preview-content h5,
+.dark .markdown-preview-content h6 {
+    color: #f9fafb;
+}
+
+.markdown-preview-content h1 {
+    font-size: 2em;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.3em;
+}
+
+.markdown-preview-content h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.3em;
+}
+
+.markdown-preview-content h3 {
+    font-size: 1.25em;
+}
+
+.markdown-preview-content h4 {
+    font-size: 1em;
+}
+
+.markdown-preview-content h5 {
+    font-size: 0.875em;
+}
+
+.markdown-preview-content h6 {
+    font-size: 0.85em;
+    color: #6b7280;
+}
+
+.dark .markdown-preview-content h1,
+.dark .markdown-preview-content h2 {
+    border-bottom-color: #374151;
+}
+
+.dark .markdown-preview-content h6 {
+    color: #9ca3af;
+}
+
+/* Paragraphs */
+.markdown-preview-content p {
+    margin: 1em 0;
+}
+
+/* Links */
+.markdown-preview-content a {
+    color: #059669;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.markdown-preview-content a:hover {
+    color: #047857;
+}
+
+.dark .markdown-preview-content a {
+    color: #10b981;
+}
+
+.dark .markdown-preview-content a:hover {
+    color: #34d399;
+}
+
+/* Lists */
+.markdown-preview-content ul,
+.markdown-preview-content ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+.markdown-preview-content ul {
+    list-style-type: disc;
+}
+
+.markdown-preview-content ol {
+    list-style-type: decimal;
+}
+
+.markdown-preview-content li {
+    margin: 0.5em 0;
+}
+
+.markdown-preview-content li > p {
+    margin: 0.25em 0;
+}
+
+/* Code */
+.markdown-preview-content code {
+    background-color: #f3f4f6;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25em;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #dc2626;
+}
+
+.dark .markdown-preview-content code {
+    background-color: #374151;
+    color: #f87171;
+}
+
+.markdown-preview-content pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1em;
+    border-radius: 0.5em;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.markdown-preview-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: 0.875rem;
+}
+
+/* Blockquotes */
+.markdown-preview-content blockquote {
+    border-left: 4px solid #059669;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.dark .markdown-preview-content blockquote {
+    border-left-color: #10b981;
+    color: #9ca3af;
+}
+
+.markdown-preview-content blockquote p {
+    margin: 0.5em 0;
+}
+
+/* Tables */
+.markdown-preview-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    overflow: auto;
+    display: block;
+}
+
+.markdown-preview-content table th,
+.markdown-preview-content table td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5em 1em;
+    text-align: left;
+}
+
+.dark .markdown-preview-content table th,
+.dark .markdown-preview-content table td {
+    border-color: #374151;
+}
+
+.markdown-preview-content table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #111827;
+}
+
+.dark .markdown-preview-content table th {
+    background-color: #374151;
+    color: #f9fafb;
+}
+
+.markdown-preview-content table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.dark .markdown-preview-content table tr:nth-child(even) {
+    background-color: #1f2937;
+}
+
+/* Images */
+.markdown-preview-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5em;
+    margin: 1em 0;
+}
+
+/* Horizontal Rule */
+.markdown-preview-content hr {
+    border: none;
+    border-top: 2px solid #e5e7eb;
+    margin: 2em 0;
+}
+
+.dark .markdown-preview-content hr {
+    border-top-color: #374151;
+}
+
+/* Text Alignment */
+.markdown-preview-content .text-left {
+    text-align: left;
+}
+
+.markdown-preview-content .text-center {
+    text-align: center;
+}
+
+.markdown-preview-content .text-right {
+    text-align: right;
+}
+
+.markdown-preview-content .text-justify {
+    text-align: justify;
+}
+
+/* Underline & Strikethrough */
+.markdown-preview-content u {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.markdown-preview-content s {
+    text-decoration: line-through;
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+.markdown-editor-panel::-webkit-scrollbar,
+.markdown-preview-panel::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.markdown-editor-panel::-webkit-scrollbar-track,
+.markdown-preview-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.markdown-editor-panel::-webkit-scrollbar-thumb,
+.markdown-preview-panel::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.dark .markdown-editor-panel::-webkit-scrollbar-thumb,
+.dark .markdown-preview-panel::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+.markdown-editor-panel::-webkit-scrollbar-thumb:hover,
+.markdown-preview-panel::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+.dark .markdown-editor-panel::-webkit-scrollbar-thumb:hover,
+.dark .markdown-preview-panel::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+.markdown-preview-content:empty::before {
+    content: 'Preview akan muncul di sini...';
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.dark .markdown-preview-content:empty::before {
+    color: #6b7280;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.markdown-editor-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    border-radius: 0;
+}
+
+.markdown-editor-fullscreen .markdown-editor-panels {
+    max-height: none;
+    height: calc(100vh - 3.5rem);
+}
