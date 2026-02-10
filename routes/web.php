@@ -3,10 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-// Redirect ke login jika belum login
-Route::get('/', function () {
+// Public portfolio routes (tanpa login)
+Route::get('/', [\App\Http\Controllers\PublicController::class, 'index'])->name('public.portfolio');
+Route::get('/artikel/{id}', [\App\Http\Controllers\PublicController::class, 'show'])->name('public.artikel.show');
+Route::get('/profil-desa', [\App\Http\Controllers\PublicController::class, 'profil'])->name('public.profil');
+Route::get('/data-penduduk', [\App\Http\Controllers\PublicController::class, 'penduduk'])->name('public.penduduk');
+Route::get('/sarana-fasilitas', [\App\Http\Controllers\PublicController::class, 'fasilitas'])->name('public.fasilitas');
+Route::get('/bantuan-sosial', [\App\Http\Controllers\PublicController::class, 'bansos'])->name('public.bansos');
+
+// Redirect ke login jika belum login (legacy route)
+Route::get('/dashboard', function () {
     return redirect()->route('login');
-});
+})->name('login-redirect');
 
 // Route untuk guest (belum login)
 Route::middleware('guest')->group(function () {
@@ -33,10 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/activity', function () {
         return view('activity-index');
     })->name('activity');
-
-    // Test Toastr routes
-    Route::get('/test-toastr', [\App\Http\Controllers\ToastrController::class, 'index'])->name('test-toastr');
-    Route::post('/test-toastr-flash', [\App\Http\Controllers\ToastrController::class, 'testFlash'])->name('test-toastr-flash');
 
     // Livewire routes for user management (permission handled in component)
     Route::get('/users', function () {

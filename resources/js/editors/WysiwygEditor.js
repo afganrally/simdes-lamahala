@@ -443,6 +443,10 @@ class WysiwygEditor {
         const imageBorder = document.getElementById('wysiwyg-image-border');
         const sizeDisplay = document.getElementById('wysiwyg-image-size');
 
+        // Declare variables in outer scope for access in insert handler
+        let currentWidth = 0;
+        let currentHeight = 0;
+
         // Wait for image to load
         imgPreview.onload = () => {
             // Store original dimensions
@@ -463,8 +467,9 @@ class WysiwygEditor {
             imgPreview.style.width = displayWidth + 'px';
             imgPreview.style.height = displayHeight + 'px';
 
-            let currentWidth = displayWidth;
-            let currentHeight = displayHeight;
+            // Update outer scope variables
+            currentWidth = displayWidth;
+            currentHeight = displayHeight;
             let aspectRatio = originalWidth / originalHeight;
 
             // Update size display
