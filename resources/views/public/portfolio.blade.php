@@ -23,17 +23,72 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Animated gradient background */
+        /* Animated gradient background with image */
         .hero-gradient {
-            background: linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background-image: url('{{ asset("img/bg.jpeg") }}'), linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
+            background-size: cover, 400% 400%;
+            background-position: center, 0% 50%;
+            background-attachment: fixed, scroll;
+            position: relative;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.4) 0%, rgba(5, 150, 105, 0.3) 50%, rgba(8, 145, 178, 0.4) 100%);
+            z-index: 0;
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% { background-position: center, 0% 50%; }
+            50% { background-position: center, 100% 50%; }
+            100% { background-position: center, 0% 50%; }
+        }
+
+        /* Stats section background */
+        .stats-bg {
+            background-image: url('{{ asset("img/bg2.jpeg") }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .stats-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.4) 100%);
+        }
+
+        .dark .stats-bg::before {
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.5) 0%, rgba(17, 24, 39, 0.4) 100%);
+        }
+
+        /* Articles section background */
+        .articles-bg {
+            background-image: url('{{ asset("img/bg3.jpeg") }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .articles-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(248, 250, 252, 0.5) 0%, rgba(241, 245, 249, 0.4) 100%);
+        }
+
+        .dark .articles-bg::before {
+            background: linear-gradient(180deg, rgba(23, 23, 23, 0.5) 0%, rgba(10, 10, 10, 0.4) 100%);
+        }
+
+        /* Footer background */
+        .footer-bg {
+            background: linear-gradient(180deg, rgba(17, 24, 39, 1) 0%, rgba(0, 0, 0, 1) 100%);
         }
 
         /* Floating animation */
@@ -129,10 +184,8 @@
             <div class="flex justify-between items-center py-3">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                        <img src="{{ asset('img/logo.jpg') }}" alt="Logo {{ config('app.name', 'SIMDESA') }}" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h1 class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
@@ -197,13 +250,13 @@
     <!-- Hero Section -->
     <section class="hero-gradient relative overflow-hidden">
         <!-- Decorative Elements -->
-        <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 opacity-10 z-0">
             <div class="absolute top-10 left-10 w-32 h-32 border-4 border-white rounded-full"></div>
             <div class="absolute bottom-10 right-10 w-24 h-24 border-4 border-white rounded-full"></div>
             <div class="absolute top-1/2 right-1/4 w-16 h-16 border-4 border-white rounded-full"></div>
         </div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-48 z-10">
             <div class="text-center">
                 <!-- Badge -->
                 <div class="inline-flex items-center px-4 py-2 rounded-full glass mb-6 animate-pulse">
@@ -225,7 +278,7 @@
 
                 <!-- CTA Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#articles" class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white rounded-xl hover:bg-emerald-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
+                    <a href="#articles" class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-emerald-600 dark:text-emerald-400 bg-white rounded-xl hover:bg-emerald-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                         </svg>
@@ -250,8 +303,8 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-12 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="stats-bg py-12 relative">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="stat-card bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg border border-neutral-200/50 dark:border-neutral-700/50 text-center">
                     <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -294,11 +347,12 @@
                     <p class="text-sm text-neutral-600 dark:text-neutral-400">Akses</p>
                 </div>
             </div>
-        </div>
+            </div>
     </section>
 
     <!-- Articles Section -->
-    <main id="articles" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <main id="articles" class="articles-bg py-16 relative">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">
             <span class="inline-block px-4 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-sm font-semibold mb-4">
@@ -400,19 +454,18 @@
                 <p class="text-neutral-600 dark:text-neutral-400 max-w-md mx-auto">Belum ada artikel yang dipublikasikan saat ini. Silakan kembali lagi nanti untuk update terbaru.</p>
             </div>
         @endif
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-neutral-900 dark:bg-black text-white border-t border-neutral-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer class="footer-bg text-white border-t border-neutral-800">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
                 <!-- Brand -->
                 <div class="md:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                            </svg>
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                            <img src="{{ asset('img/logo.jpg') }}" alt="Logo {{ config('app.name', 'SIMDESA') }}" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <h3 class="text-xl font-bold">{{ config('app.name', 'SIMDESA') }}</h3>
@@ -468,7 +521,7 @@
                     <p class="mt-2 md:mt-0">Dibuat dengan ❤️ untuk kemajuan desa</p>
                 </div>
             </div>
-        </div>
+            </div>
     </footer>
 
     @livewireScripts
