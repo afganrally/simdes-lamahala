@@ -23,6 +23,16 @@ class AdminUserSeeder extends Seeder
             ]);
         }
 
+        // Create a kepala desa user if it doesn't exist
+        if (!User::where('username', 'kepala_desa')->exists()) {
+            User::create([
+                'name' => 'Kepala Desa',
+                'username' => 'kepala_desa',
+                'password' => Hash::make('password'),
+                'role' => 'kepala_desa',
+            ]);
+        }
+
         // Create a regular user for testing if it doesn't exist
         if (!User::where('username', 'user')->exists()) {
             User::create([

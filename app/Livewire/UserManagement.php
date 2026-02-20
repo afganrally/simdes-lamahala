@@ -27,7 +27,7 @@ class UserManagement extends Component
         'name' => 'required|string|max:255',
         'username' => 'required|string|max:255|unique:users',
         'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:admin,operator',
+        'role' => 'required|in:admin,kepala_desa,operator',
     ];
 
     public function render()
@@ -142,7 +142,7 @@ class UserManagement extends Component
                 'max:255',
                 Rule::unique('users')->ignore($this->user_id),
             ],
-            'role' => 'required|in:admin,operator',
+            'role' => 'required|in:admin,kepala_desa,operator',
         ];
 
         if ($this->password) {

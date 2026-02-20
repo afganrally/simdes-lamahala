@@ -120,7 +120,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                                @if($user->role !== 'admin')
+                                @if($user->role !== 'admin' && $user->role !== 'kepala_desa')
                                     <button wire:click="openUserMenus({{ $user->id }})" class="inline-flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-all cursor-pointer">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
@@ -128,7 +128,7 @@
                                         Atur Menu
                                     </button>
                                 @else
-                                    <span class="text-sm text-neutral-400 dark:text-neutral-500">Admin punya akses penuh</span>
+                                    <span class="text-sm text-neutral-400 dark:text-neutral-500">Admin & Kepala Desa punya akses penuh</span>
                                 @endif
                             </td>
                         </tr>

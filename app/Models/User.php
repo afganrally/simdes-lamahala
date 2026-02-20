@@ -71,8 +71,8 @@ class User extends Authenticatable
      */
     public function hasPermission($permissionName): bool
     {
-        // Admin memiliki semua akses
-        if ($this->role === 'admin') {
+        // Admin dan Kepala Desa memiliki semua akses
+        if ($this->role === 'admin' || $this->role === 'kepala_desa') {
             return true;
         }
 

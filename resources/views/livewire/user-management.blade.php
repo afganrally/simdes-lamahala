@@ -155,8 +155,8 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->role == 'admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' }}">
-                                    {{ ucfirst($user->role) }}
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->role == 'admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : ($user->role == 'kepala_desa' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200') }}">
+                                    {{ $user->role == 'kepala_desa' ? 'Kepala Desa' : ucfirst($user->role) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-neutral-500 dark:text-neutral-400">
@@ -368,6 +368,7 @@
                                         class="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-neutral-700 dark:text-white transition-colors duration-200">
                                         <option value="">Pilih Role</option>
                                         <option value="admin">Administrator</option>
+                                        <option value="kepala_desa">Kepala Desa</option>
                                         <option value="operator">Operator</option>
                                     </select>
                                     @error('role')

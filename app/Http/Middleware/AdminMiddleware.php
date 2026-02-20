@@ -17,12 +17,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated and is an admin
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        // Check if user is authenticated and is an admin or kepala desa
+        if (Auth::check() && (Auth::user()->role === 'admin' || Auth::user()->role === 'kepala_desa')) {
             return $next($request);
         }
 
-        // Redirect to dashboard with error message if not admin
+        // Redirect to dashboard with error message if not admin or kepala desa
         return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
     }
 }
