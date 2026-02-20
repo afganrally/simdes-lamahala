@@ -70,11 +70,11 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                @if($item->status_penerima == 'Aktif') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @elseif($item->status_penerima == 'Berhenti') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                                @elseif($item->status_penerima == 'Pindah') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                @if($item->status == 'Disalurkan') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($item->status == 'Pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @elseif($item->status == 'Proses') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
-                                {{ $item->status_penerima }}
+                                {{ $item->status }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -259,22 +259,22 @@
                             @enderror
                         </div>
 
-                        <!-- Status Penerima -->
+                        <!-- Status Penyaluran -->
                         <div>
                             <label class="inline-flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                                 <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                Status Penerima <span class="text-red-500">*</span>
+                                Status Penyaluran <span class="text-red-500">*</span>
                             </label>
-                            <select wire:model="status_penerima" class="input w-full">
+                            <select wire:model="status" class="input w-full">
                                 <option value="">Pilih Status</option>
-                                <option value="Aktif">Aktif</option>
-                                <option value="Berhenti">Berhenti</option>
-                                <option value="Pindah">Pindah</option>
-                                <option value="Meninggal">Meninggal</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Disalurkan">Disalurkan</option>
+                                <option value="Proses">Proses</option>
+                                <option value="Batal">Batal</option>
                             </select>
-                            @error('status_penerima')
+                            @error('status')
                                 <div class="mt-1 text-red-500 text-sm">{{ $message }}</div>
                             @enderror
                         </div>

@@ -18,7 +18,7 @@ class Bansos extends Model
         'tanggal_penyaluran',
         'sumber_dana',
         'periode',
-        'status_penerima',
+        'status',
         'keterangan',
         'foto_dokumen',
         'id_user',

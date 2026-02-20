@@ -48,6 +48,22 @@
             font-feature-settings: 'tnum';
             letter-spacing: -0.025em;
         }
+
+        /* Hero gradient background */
+        .hero-gradient {
+            background: linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
+            background-size: 400% 400%;
+            background-position: 0% 50%;
+            position: relative;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.4) 0%, rgba(5, 150, 105, 0.3) 50%, rgba(8, 145, 178, 0.4) 100%);
+            z-index: 0;
+        }
     </style>
 </head>
 <body class="antialiased bg-gradient-to-br from-slate-50 via-neutral-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-950 min-h-screen">
@@ -56,10 +72,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-3">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011-1v5m-4 0h4"></path>
-                        </svg>
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                        <img src="{{ asset('img/logo.jpg') }}" alt="Logo {{ config('app.name', 'SIMDESA') }}" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h1 class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
@@ -81,7 +95,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-                    <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-all shadow-sm hover:shadow">Login</a>
                     <button id="theme-toggle" class="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all shadow-sm hover:shadow">
                         <svg class="w-5 h-5 text-neutral-700 dark:text-neutral-300 dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg class="w-5 h-5 text-neutral-300 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707-.707a1 1 0 011.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 01-2 2 2.828 2 0 00-2 2zm0 0a2 2 0 012 2h2a2 2 0 012 2 6-2 6-2 0 00-2 2V7a2 2 0 01-2 2 4.318 2 0 00-2 2zm0 0a2 2 0 012 2h2a2 2 0 012 2 6-2 0 00-2 2z"></path></svg>
@@ -101,7 +114,7 @@
     </header>
 
     <!-- Hero -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 py-20">
+    <section class="hero-gradient relative overflow-hidden py-20">
         <div class="absolute inset-0 overflow-hidden">
             <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
@@ -111,10 +124,10 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-flex items-center px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
-                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v6a2 2 0 00-2 2h3a2 2 0 00-2 2v14l-2 2h2a2 2 0 012 2v1m2 13a2 2 0 01-2 2V7m2 13a2 2 0 002-2V9a2 2 0 00-2 2zm-2 0a2 2 0 012 2h2a2 2 0 012 2 6-2 6-2 0 00-2 2v14a2 2 0 012 2 6-2 6-2 0 00-2zm0 0a2 2 0 012 2h2a2 2 0 01-2 2V7m2 13a2 2 0 01-2 2.828 2 0 00-2 2z"></path>
                 </svg>
-                <span class="ml-3 text-lg font-semibold text-indigo-900">Data Penduduk</span>
+                <span class="ml-3 text-lg font-semibold text-emerald-900">Data Penduduk</span>
             </div>
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Statistik Demografi Desa</h2>
             <p class="text-xl text-white/90 max-w-2xl mx-auto">Informasi kependudukan dan data statistik penduduk secara real-time</p>
@@ -357,17 +370,17 @@
                 </div>
 
                 <!-- SD -->
-                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-900/50 rounded-xl p-5 border border-indigo-200 dark:border-indigo-700/50">
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-900/50 rounded-xl p-5 border border-emerald-200 dark:border-emerald-700/50">
                     <div class="flex flex-col items-center text-center">
                         <div class="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg mb-3">
                             <span class="text-white text-lg font-bold">SD</span>
                         </div>
-                        <p class="text-sm font-medium text-indigo-700 dark:text-indigo-300 mb-1">SD/Sederajat</p>
-                        <p class="text-2xl font-bold text-indigo-800 dark:text-indigo-100 mb-2">{{ number_format($sd, 0, ',', '.') }}</p>
-                        <div class="w-full bg-indigo-200 dark:bg-indigo-800 rounded-full h-2 overflow-hidden">
-                            <div class="bg-indigo-500 h-2 progress-bar" style="width: {{ $totalPenduduk > 0 ? ($sd / $totalPenduduk * 100) : 0 }}%"></div>
+                        <p class="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">SD/Sederajat</p>
+                        <p class="text-2xl font-bold text-emerald-800 dark:text-indigo-100 mb-2">{{ number_format($sd, 0, ',', '.') }}</p>
+                        <div class="w-full bg-emerald-200 dark:bg-emerald-800 rounded-full h-2 overflow-hidden">
+                            <div class="bg-emerald-500 h-2 progress-bar" style="width: {{ $totalPenduduk > 0 ? ($sd / $totalPenduduk * 100) : 0 }}%"></div>
                         </div>
-                        <p class="text-xs text-indigo-600 dark:text-indigo-400 mt-2">{{ number_format($totalPenduduk > 0 ? ($sd / $totalPenduduk * 100) : 0, 1, ',', '.') }}%</p>
+                        <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-2">{{ number_format($totalPenduduk > 0 ? ($sd / $totalPenduduk * 100) : 0, 1, ',', '.') }}%</p>
                     </div>
                 </div>
 

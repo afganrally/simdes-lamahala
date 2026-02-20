@@ -12,7 +12,7 @@ class BansosManagement extends Component
 {
     use WithPagination, WithFileUploads;
 
-    public $bansos_id, $jenis, $kategori, $jumlah, $tanggal_penyaluran, $sumber_dana, $periode, $status_penerima, $keterangan;
+    public $bansos_id, $jenis, $kategori, $jumlah, $tanggal_penyaluran, $sumber_dana, $periode, $status, $keterangan;
     public $foto_dokumen, $id_penduduk;
     public $search = '';
     public $isOpen = false;
@@ -24,7 +24,7 @@ class BansosManagement extends Component
         'tanggal_penyaluran' => 'required|date',
         'sumber_dana' => 'required|string',
         'periode' => 'required|string',
-        'status_penerima' => 'required|string',
+        'status' => 'required|in:Pending,Disalurkan,Proses,Batal',
         'keterangan' => 'nullable|string',
         'foto_dokumen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'id_penduduk' => 'required|exists:penduduks,id'
@@ -36,7 +36,7 @@ class BansosManagement extends Component
             ->where(function($query) {
                 $query->where('jenis', 'like', '%'.$this->search.'%')
                       ->orWhere('kategori', 'like', '%'.$this->search.'%')
-                      ->orWhere('status_penerima', 'like', '%'.$this->search.'%');
+                      ->orWhere('status', 'like', '%'.$this->search.'%');
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -93,7 +93,7 @@ class BansosManagement extends Component
         $this->tanggal_penyaluran = '';
         $this->sumber_dana = '';
         $this->periode = '';
-        $this->status_penerima = '';
+        $this->status = '';
         $this->keterangan = '';
         $this->foto_dokumen = null;
         $this->id_penduduk = '';
@@ -120,7 +120,7 @@ class BansosManagement extends Component
             'tanggal_penyaluran' => $this->tanggal_penyaluran,
             'sumber_dana' => $this->sumber_dana,
             'periode' => $this->periode,
-            'status_penerima' => $this->status_penerima,
+            'status' => $this->status,
             'keterangan' => $this->keterangan,
             'id_user' => auth()->user()->id,
             'id_penduduk' => $this->id_penduduk
@@ -157,7 +157,7 @@ class BansosManagement extends Component
         $this->tanggal_penyaluran = $bansos->tanggal_penyaluran;
         $this->sumber_dana = $bansos->sumber_dana;
         $this->periode = $bansos->periode;
-        $this->status_penerima = $bansos->status_penerima;
+        $this->status = $bansos->status;
         $this->keterangan = $bansos->keterangan;
         $this->id_penduduk = $bansos->id_penduduk;
 
