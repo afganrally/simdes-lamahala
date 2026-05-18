@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simdes_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - simdes_network
+
+  db:
+    image: mariadb:10.11
+    container_name: simdes_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_simdes_lamahala
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Mount the dump file to be automatically imported on first start
+      - ./db_simdes_lamahala.sql:/docker-entrypoint-initdb.d/db_simdes_lamahala.sql
+    networks:
+      - simdes_network
+
+networks:
+  simdes_network:
+    driver: bridge
+
+volumes:
+  db_data:

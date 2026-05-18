@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import "./sweetalert.js";
 import "./delete-handler.js";
 import "./editors/wysiwyg-editor-init.js";
+import ApexCharts from 'apexcharts';
+window.ApexCharts = ApexCharts;
 
 // Configure Toastr defaults
 toastr.options = {

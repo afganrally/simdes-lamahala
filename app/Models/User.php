@@ -71,9 +71,14 @@ class User extends Authenticatable
      */
     public function hasPermission($permissionName): bool
     {
-        // Admin dan Kepala Desa memiliki semua akses
-        if ($this->role === 'admin' || $this->role === 'kepala_desa') {
+        // Admin memiliki semua akses
+        if ($this->role === 'admin') {
             return true;
+        }
+
+        // Kepala Desa HANYA memiliki akses ke dashboard (dan grafik)
+        if ($this->role === 'kepala_desa') {
+            return in_array($permissionName, ['view_dashboard']);
         }
 
         return $this->permissions()

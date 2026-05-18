@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="stylesheet" href="/build/leaflet.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -22,16 +23,75 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .hero-gradient {
-            background: linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+        /* Hero Slideshow */
+        .hero-slideshow {
+            position: relative;
+            height: 520px;
+            overflow: hidden;
         }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            transform: scale(1.04);
+            transition: opacity 1.2s ease-in-out, transform 6s ease-in-out;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.25) 0%,
+                rgba(0,20,20,0.55) 60%,
+                rgba(0,40,30,0.75) 100%
+            );
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        .hero-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.45);
+            border: 2px solid rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hero-dot.active {
+            background: #fff;
+            width: 24px;
+            border-radius: 6px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
         }
     </style>
 </head>
@@ -96,13 +156,57 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-gradient relative overflow-hidden">
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div class="text-center">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Profil Desa</h2>
-                <p class="text-xl text-emerald-100 max-w-2xl mx-auto">Mengenal lebih dekat desa kami, sejarah, visi, misi, dan struktur organisasi</p>
+    <!-- Hero Section - Slideshow -->
+    <section class="hero-slideshow">
+
+        <!-- Slides -->
+        <div class="hero-slide active" id="slide-0" style="background-image:url('{{ asset('img/hero1.jpeg') }}')"></div>
+        <div class="hero-slide"        id="slide-1" style="background-image:url('{{ asset('img/hero2.jpeg') }}')"></div>
+        <div class="hero-slide"        id="slide-2" style="background-image:url('{{ asset('img/hero3.jpeg') }}')"></div>
+        <div class="hero-slide"        id="slide-3" style="background-image:url('{{ asset('img/hero4.jpeg') }}')"></div>
+
+        <!-- Overlay -->
+        <div class="hero-overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Desa Lamahala Jaya
             </div>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg"
+                style="text-shadow:0 2px 20px rgba(0,0,0,0.4)">
+                Profil Desa
+            </h2>
+            <p class="text-lg md:text-xl text-white max-w-2xl mx-auto mb-8 drop-shadow"
+               style="text-shadow:0 1px 10px rgba(0,0,0,0.4)">
+                Mengenal lebih dekat desa kami — sejarah, visi, misi, dan struktur organisasi pemerintahan
+            </p>
+
+            <!-- Navigation Dots -->
+            <div class="flex items-center gap-2" id="hero-dots">
+                <button class="hero-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+                <button class="hero-dot"        onclick="goToSlide(1)" aria-label="Slide 2"></button>
+                <button class="hero-dot"        onclick="goToSlide(2)" aria-label="Slide 3"></button>
+                <button class="hero-dot"        onclick="goToSlide(3)" aria-label="Slide 4"></button>
+            </div>
+        </div>
+
+        <!-- Prev / Next Arrow -->
+        <button onclick="changeSlide(-1)"
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all"
+            aria-label="Previous">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button onclick="changeSlide(1)"
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all"
+            aria-label="Next">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <!-- Scroll hint -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+            <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </div>
     </section>
 
@@ -141,13 +245,13 @@
 
                     <div class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-6 my-6 border-l-4 border-amber-500">
                         <p class="text-neutral-800 dark:text-neutral-200 italic leading-relaxed mb-0">
-                            Akhirnya kepada Rombongan <strong>Ata Ile Jadi – Woka Sura Kamolu Wato Pukan</strong>, ditunjuk dan harus menerima dengan alasan bahwa, <em>"Mio Ata Ile Jadi Woka Sura, maka Mio amut buno doro doan, Mio lolon tawa bage lela, miolah yang pantas ma'an pehen Lewo Tanah"</em>.
+                            Akhirnya kepada Rombongan <strong>Ata Ile Jadi â€“ Woka Sura Kamolu Wato Pukan</strong>, ditunjuk dan harus menerima dengan alasan bahwa, <em>"Mio Ata Ile Jadi Woka Sura, maka Mio amut buno doro doan, Mio lolon tawa bage lela, miolah yang pantas ma'an pehen Lewo Tanah"</em>.
                         </p>
                     </div>
 
                     <h4 class="text-xl font-bold text-neutral-900 dark:text-white mt-8 mb-4">Struktur Pemerintahan Adat</h4>
                     <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Dalam perjalanan selanjutnya tata keperintahan Desa Lamahala Jaya berdasarkan Pemerintahan Adat yang terdiri dari <strong>Bela Suku Tello – Kapitan Pulo dan Pegawe Lema</strong>. Adapun Bela Suku Tello, merupakan pimpinan utama dengan membidangi urusan masing-masing namun tetap dalam bingkai Kesatuan Bela (Tobo sama lere – Dei sama belolo).
+                        Dalam perjalanan selanjutnya tata keperintahan Desa Lamahala Jaya berdasarkan Pemerintahan Adat yang terdiri dari <strong>Bela Suku Tello â€“ Kapitan Pulo dan Pegawe Lema</strong>. Adapun Bela Suku Tello, merupakan pimpinan utama dengan membidangi urusan masing-masing namun tetap dalam bingkai Kesatuan Bela (Tobo sama lere â€“ Dei sama belolo).
                     </p>
 
                     <div class="grid md:grid-cols-3 gap-4 my-6">
@@ -217,17 +321,17 @@
                                 <tr class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 bg-amber-50 dark:bg-amber-900/20">
                                     <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">6</td>
                                     <td class="px-4 py-3 text-neutral-900 dark:text-white font-medium">Muhammad Abduh <span class="text-xs bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full ml-2">Penjabat</span></td>
-                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2002 – 2004</td>
+                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2002 â€“ 2004</td>
                                 </tr>
                                 <tr class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">7</td>
                                     <td class="px-4 py-3 text-neutral-900 dark:text-white font-medium">Muhammad Abduh</td>
-                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2005 – 2010</td>
+                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2005 â€“ 2010</td>
                                 </tr>
                                 <tr class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
                                     <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">8</td>
                                     <td class="px-4 py-3 text-neutral-900 dark:text-white font-medium">Ahmad Daud</td>
-                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2010 – 2016</td>
+                                    <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">2010 â€“ 2016</td>
                                 </tr>
                                 <tr class="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 bg-amber-50 dark:bg-amber-900/20">
                                     <td class="px-4 py-3 text-neutral-600 dark:text-neutral-400">9</td>
@@ -362,7 +466,7 @@
                 <!-- Informasi Umum -->
                 <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 mb-8 border-l-4 border-green-500">
                     <p class="text-neutral-800 dark:text-neutral-200 leading-relaxed mb-0">
-                        Desa Lamahala Jaya merupakan salah satu desa di Kecamatan Adonara Timur Kabupaten Flores Timur, Provinsi Nusa Tenggara Timur, memiliki luas wilayah <strong>± 444.24 Ha/m²</strong>.
+                        Desa Lamahala Jaya merupakan salah satu desa di Kecamatan Adonara Timur Kabupaten Flores Timur, Provinsi Nusa Tenggara Timur, memiliki luas wilayah <strong>Â± 444.24 Ha/mÂ²</strong>.
                     </p>
                 </div>
 
@@ -414,6 +518,18 @@
                         </div>
                     </div>
                 </div>
+                {{-- Peta Interaktif --}}
+                <div class="mb-8">
+                    <div class="flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <h5 class="font-bold text-neutral-900 dark:text-white">Peta Lokasi Desa</h5>
+                        <span class="text-xs text-neutral-400 dark:text-neutral-500">(Desa Lamahala Jaya, Adonara Timur)</span>
+                    </div>
+                    <div id="map-desa" class="w-full rounded-2xl overflow-hidden shadow-lg border border-neutral-200 dark:border-neutral-700" style="height: 420px; z-index: 0;"></div>
+                    <p class="text-xs text-neutral-400 mt-2 text-center">Peta interaktif via OpenStreetMap &bull; Geser dan zoom untuk menjelajahi area desa</p>
+                </div>
 
                 <!-- Informasi Administratif -->
                 <div class="grid md:grid-cols-3 gap-4 mb-8">
@@ -456,7 +572,7 @@
                             </svg>
                             Topografi
                         </h5>
-                        <p class="text-neutral-600 dark:text-neutral-400 text-sm">Dataran rendah, bergelombang. Ketinggian wilayah: <strong>0 – 100 m dpl</strong> (dataran rendah)</p>
+                        <p class="text-neutral-600 dark:text-neutral-400 text-sm">Dataran rendah, bergelombang. Ketinggian wilayah: <strong>0 â€“ 100 m dpl</strong> (dataran rendah)</p>
                     </div>
                 </div>
 
@@ -839,7 +955,7 @@
                             <tr class="border-b border-neutral-200 dark:border-neutral-700">
                                 <td class="px-3 py-2 text-neutral-600 dark:text-neutral-400">1</td>
                                 <td class="px-3 py-2 text-neutral-900 dark:text-white">Material Batu Kali dan Kerikil</td>
-                                <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">M³</td>
+                                <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">MÂ³</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
@@ -849,7 +965,7 @@
                             <tr class="border-b border-neutral-200 dark:border-neutral-700">
                                 <td class="px-3 py-2 text-neutral-600 dark:text-neutral-400">2</td>
                                 <td class="px-3 py-2 text-neutral-900 dark:text-white">Pasir Urug</td>
-                                <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">M³</td>
+                                <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">MÂ³</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
                                 <td class="px-3 py-2 text-center text-neutral-600 dark:text-neutral-400">-</td>
@@ -921,200 +1037,132 @@
             </div>
         </section>
 
-        <!-- Struktur Organisasi -->
+        <!-- Struktur Organisasi (Diagram) -->
         <section>
             <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-8 md:p-12 border border-neutral-200/50 dark:border-neutral-700/50">
-                <div class="flex items-center mb-8">
+                <div class="flex items-center mb-10">
                     <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center mr-4">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white">Struktur Organisasi</h3>
+                    <div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-white">Struktur Organisasi</h3>
+                        <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Pemerintah Desa Lamahala Jaya</p>
+                    </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Penjabat Kepala Desa -->
-                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Penjabat Kepala Desa</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Abubakar Hasan</p>
+                <style>
+                    .org-card { transition: transform 0.2s, box-shadow 0.2s; }
+                    .org-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+                    .org-line-v { width: 2px; background: #10b981; flex-shrink: 0; }
+                    .org-line-h { height: 2px; background: #10b981; }
+                    .org-line-h-gray { height: 2px; background: #6b7280; }
+                </style>
+
+                <div class="overflow-x-auto pb-6">
+                  <div class="flex flex-col items-center" style="min-width:900px;">
+
+                    {{-- LEVEL 1: Kepala Desa --}}
+                    <div class="org-card bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-2xl px-6 py-4 text-center shadow-lg border-2 border-emerald-300 w-52">
+                        <div class="w-12 h-12 bg-white/25 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-emerald-100">Penjabat Kepala Desa</p>
+                        <p class="text-sm font-bold mt-1">Abubakar Hasan</p>
                     </div>
 
-                    <!-- Sekretaris Desa -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Sekretaris Desa</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Taufik Ibrahim</p>
+                    {{-- Connector down --}}
+                    <div class="org-line-v" style="height:28px;"></div>
+
+                    {{-- LEVEL 2: Sekretaris Desa --}}
+                    <div class="org-card bg-gradient-to-br from-blue-500 to-cyan-600 text-white rounded-2xl px-6 py-4 text-center shadow-lg border-2 border-blue-300 w-48">
+                        <div class="w-10 h-10 bg-white/25 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-blue-100">Sekretaris Desa</p>
+                        <p class="text-sm font-bold mt-1">Taufik Ibrahim</p>
                     </div>
 
-                    <!-- Kaur Administrasi -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    {{-- Connector down to Kaur level --}}
+                    <div class="org-line-v" style="height:28px;"></div>
+
+                    {{-- LEVEL 3: Kaur & Kasie row --}}
+                    {{-- Horizontal container --}}
+                    <div class="relative flex justify-center items-start w-full">
+                        {{-- Horizontal line spanning all Kaur/Kasie --}}
+                        <div class="org-line-h absolute" style="top:0; left:10%; right:10%;"></div>
+
+                        @php
+                        $level3 = [
+                            ['jabatan'=>'Kaur Administrasi','nama'=>'Muh. Arsyad','bg'=>'bg-indigo-50 dark:bg-indigo-900/30','border'=>'border-indigo-300 dark:border-indigo-700','grad'=>'from-indigo-500 to-purple-600','txt'=>'text-indigo-700 dark:text-indigo-300'],
+                            ['jabatan'=>'Kaur Keuangan','nama'=>'Gita Lestari P.','bg'=>'bg-purple-50 dark:bg-purple-900/30','border'=>'border-purple-300 dark:border-purple-700','grad'=>'from-purple-500 to-pink-600','txt'=>'text-purple-700 dark:text-purple-300'],
+                            ['jabatan'=>'Kaur Umum','nama'=>'Nur Cahyat','bg'=>'bg-rose-50 dark:bg-rose-900/30','border'=>'border-rose-300 dark:border-rose-700','grad'=>'from-rose-500 to-red-600','txt'=>'text-rose-700 dark:text-rose-300'],
+                            ['jabatan'=>'Kasie Pemerintahan','nama'=>'Hasan Raden','bg'=>'bg-amber-50 dark:bg-amber-900/30','border'=>'border-amber-300 dark:border-amber-700','grad'=>'from-amber-500 to-orange-600','txt'=>'text-amber-700 dark:text-amber-300'],
+                            ['jabatan'=>'Kasie Pembangunan','nama'=>'Muhammad Keri','bg'=>'bg-teal-50 dark:bg-teal-900/30','border'=>'border-teal-300 dark:border-teal-700','grad'=>'from-teal-500 to-green-600','txt'=>'text-teal-700 dark:text-teal-300'],
+                            ['jabatan'=>'Kasie Kesejahteraan','nama'=>'M. Ali Bethan','bg'=>'bg-cyan-50 dark:bg-cyan-900/30','border'=>'border-cyan-300 dark:border-cyan-700','grad'=>'from-cyan-500 to-blue-600','txt'=>'text-cyan-700 dark:text-cyan-300'],
+                        ];
+                        @endphp
+
+                        @foreach($level3 as $item)
+                        <div class="flex flex-col items-center mx-3">
+                            <div class="org-line-v" style="height:28px;"></div>
+                            <div class="org-card {{ $item['bg'] }} border-2 {{ $item['border'] }} rounded-xl px-3 py-3 text-center w-36 shadow-md">
+                                <div class="w-9 h-9 bg-gradient-to-br {{ $item['grad'] }} rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </div>
+                                <p class="text-xs font-semibold {{ $item['txt'] }} leading-tight">{{ $item['jabatan'] }}</p>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{{ $item['nama'] }}</p>
                             </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kaur Administrasi</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Muh. Arsyad</p>
                         </div>
+                        @endforeach
                     </div>
 
-                    <!-- Kaur Keuangan -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kaur Keuangan</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Gita Lestari Prenta</p>
-                        </div>
+                    {{-- Connector down to Kepala Dusun --}}
+                    <div class="org-line-v" style="height:28px;"></div>
+
+                    {{-- LEVEL 4: Kepala Dusun --}}
+                    <div class="mb-2">
+                        <span class="inline-block px-4 py-1.5 bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 text-xs font-bold rounded-full border border-neutral-300 dark:border-neutral-600 tracking-wide uppercase">Kepala Dusun</span>
                     </div>
 
-                    <!-- Kaur Umum -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-rose-500 to-red-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
+                    <div class="relative flex justify-center items-start w-full">
+                        <div class="org-line-h-gray absolute" style="top:0; left:8%; right:8%;"></div>
+
+                        @php
+                        $dusuns = [
+                            ['jabatan'=>'Kasie I','nama'=>'Hasan Al-Banna S.','bg'=>'bg-lime-50 dark:bg-lime-900/30','border'=>'border-lime-300 dark:border-lime-700','grad'=>'from-lime-500 to-green-600','txt'=>'text-lime-700 dark:text-lime-300'],
+                            ['jabatan'=>'Kasie II','nama'=>'Abubakar Bethan','bg'=>'bg-sky-50 dark:bg-sky-900/30','border'=>'border-sky-300 dark:border-sky-700','grad'=>'from-sky-500 to-indigo-600','txt'=>'text-sky-700 dark:text-sky-300'],
+                            ['jabatan'=>'Kasie III','nama'=>'Syamsul Ratuloly','bg'=>'bg-fuchsia-50 dark:bg-fuchsia-900/30','border'=>'border-fuchsia-300 dark:border-fuchsia-700','grad'=>'from-fuchsia-500 to-purple-600','txt'=>'text-fuchsia-700 dark:text-fuchsia-300'],
+                            ['jabatan'=>'Kasie IV','nama'=>'Kapten Belae','bg'=>'bg-violet-50 dark:bg-violet-900/30','border'=>'border-violet-300 dark:border-violet-700','grad'=>'from-violet-500 to-purple-600','txt'=>'text-violet-700 dark:text-violet-300'],
+                            ['jabatan'=>'Kasie V','nama'=>'Lukman Umar','bg'=>'bg-pink-50 dark:bg-pink-900/30','border'=>'border-pink-300 dark:border-pink-700','grad'=>'from-pink-500 to-rose-600','txt'=>'text-pink-700 dark:text-pink-300'],
+                            ['jabatan'=>'Kasie VI','nama'=>'Hasan Raden','bg'=>'bg-orange-50 dark:bg-orange-900/30','border'=>'border-orange-300 dark:border-orange-700','grad'=>'from-orange-500 to-amber-600','txt'=>'text-orange-700 dark:text-orange-300'],
+                        ];
+                        @endphp
+
+                        @foreach($dusuns as $d)
+                        <div class="flex flex-col items-center mx-3">
+                            <div class="bg-gray-400 dark:bg-gray-500" style="width:2px; height:28px;"></div>
+                            <div class="org-card {{ $d['bg'] }} border-2 {{ $d['border'] }} rounded-xl px-3 py-3 text-center w-32 shadow-md">
+                                <div class="w-8 h-8 bg-gradient-to-br {{ $d['grad'] }} rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                </div>
+                                <p class="text-xs font-semibold {{ $d['txt'] }}">{{ $d['jabatan'] }}</p>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{{ $d['nama'] }}</p>
                             </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kaur Umum</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Nur Cahyat</p>
                         </div>
+                        @endforeach
                     </div>
 
-                    <!-- Kasie Pemerintahan -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie Pemerintahan</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Hasan Raden</p>
-                        </div>
+                    {{-- Legend --}}
+                    <div class="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-4 justify-center text-xs text-neutral-500 dark:text-neutral-400">
+                        <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-gradient-to-br from-emerald-500 to-teal-600 inline-block"></span> Kepala Desa</div>
+                        <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-gradient-to-br from-blue-500 to-cyan-600 inline-block"></span> Sekretaris Desa</div>
+                        <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-indigo-100 dark:bg-indigo-800 border border-indigo-300 inline-block"></span> Kaur / Kasie</div>
+                        <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-lime-100 dark:bg-lime-900 border border-lime-300 inline-block"></span> Kepala Dusun</div>
                     </div>
 
-                    <!-- Kasie Pembangunan -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-green-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie Pembangunan</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Muhmmad Keri</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie Kesejahteraan -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie Kesejahteraan</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">M. Ali Bethan</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie I -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-lime-500 to-green-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie I</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Hasan Al-Banna S.</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie II -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie II</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Abubakar Bethan</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie III -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie III</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Syamsul Ratuloly</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie IV -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie IV</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Kapten Belae</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie V -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie V</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Lukman Umar</p>
-                        </div>
-                    </div>
-
-                    <!-- Kasie VI -->
-                    <div class="bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-5 border border-neutral-200 dark:border-neutral-700">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-amber-600 rounded-full flex items-center justify-center mb-3">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="font-bold text-neutral-900 dark:text-white text-sm">Kasie VI</h4>
-                            <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Hasan Raden</p>
-                        </div>
-                    </div>
+                  </div>
                 </div>
             </div>
         </section>
@@ -1133,12 +1181,115 @@
                         <p class="text-sm">Sistem Informasi Desa</p>
                     </div>
                 </div>
-                <p class="text-sm">&copy; {{ date('Y') }} {{ config('app.name', 'SIMDESA') }}. Dibuat dengan ❤️ untuk kemajuan desa</p>
+                <p class="text-sm">&copy; {{ date('Y') }} {{ config('app.name', 'SIMDESA') }}. Dibuat dengan â¤ï¸ untuk kemajuan desa</p>
             </div>
         </div>
     </footer>
 
+
+    <!-- Hero Slideshow Script -->
+    <script>
+        var heroCurrentSlide = 0;
+        var heroTotal = 4;
+        var heroTimer = null;
+
+        function goToSlide(index) {
+            var slides = document.querySelectorAll('.hero-slide');
+            var dots   = document.querySelectorAll('.hero-dot');
+            slides[heroCurrentSlide].classList.remove('active');
+            dots[heroCurrentSlide].classList.remove('active');
+            heroCurrentSlide = (index + heroTotal) % heroTotal;
+            slides[heroCurrentSlide].classList.add('active');
+            dots[heroCurrentSlide].classList.add('active');
+        }
+
+        function changeSlide(dir) {
+            goToSlide(heroCurrentSlide + dir);
+            resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(heroTimer);
+            heroTimer = setInterval(function() { goToSlide(heroCurrentSlide + 1); }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            resetTimer();
+        });
+    </script>
     @livewireScripts
+    <!-- Leaflet Map Script -->
+    <script src="/build/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var mapEl = document.getElementById('map-desa');
+            if (!mapEl) return;
+
+            // Koordinat PASTI Desa Lamahala Jaya dari OpenStreetMap (Node #1271856175)
+            var lat = -8.3907371, lng = 123.1499856;
+
+            var map = L.map('map-desa', {
+                center: [lat, lng],
+                zoom: 16,
+                scrollWheelZoom: false
+            });
+
+            // OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: 'Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Marker utama desa
+            var iconDesa = L.divIcon({
+                html: '<div style="background:linear-gradient(135deg,#10b981,#0d9488);width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 4px 14px rgba(0,0,0,0.35)"></div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                className: ''
+            });
+
+            L.marker([lat, lng], { icon: iconDesa })
+                .addTo(map)
+                .bindPopup(
+                    '<div style="text-align:center;font-family:Inter,sans-serif;padding:4px">' +
+                    '<strong style="color:#059669;font-size:14px">Desa Lamahala Jaya</strong><br>' +
+                    '<small style="color:#6b7280">Kec. Adonara Timur<br>Kab. Flores Timur, NTT</small>' +
+                    '</div>',
+                    { maxWidth: 210 }
+                )
+                .openPopup();
+
+            // Label batas wilayah — relatif terhadap koordinat desa
+            var batas = [
+                { dir: 'Utara',   nama: 'Desa Ipiebang',    lat: lat + 0.013, lng: lng,         color: '#f43f5e', arrow: '\u25B2' },
+                { dir: 'Timur',   nama: 'Kel. Waiwerang',   lat: lat,         lng: lng + 0.020,  color: '#f59e0b', arrow: '\u25BA' },
+                { dir: 'Selatan', nama: 'Pantai',            lat: lat - 0.010, lng: lng,          color: '#3b82f6', arrow: '\u25BC' },
+                { dir: 'Barat',   nama: 'Desa Terong',       lat: lat,         lng: lng - 0.020,  color: '#8b5cf6', arrow: '\u25C4' },
+            ];
+
+            batas.forEach(function(b) {
+                var icon = L.divIcon({
+                    html: '<div style="background:' + b.color + ';color:white;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-family:Inter,sans-serif">' + b.arrow + ' ' + b.dir + ': ' + b.nama + '</div>',
+                    iconSize: [null, null],
+                    iconAnchor: [60, 12],
+                    className: ''
+                });
+                L.marker([b.lat, b.lng], { icon: icon })
+                    .addTo(map)
+                    .bindPopup('<b>' + b.dir + ':</b> ' + b.nama);
+            });
+
+            // Lingkaran area perkiraan wilayah desa (~700m radius)
+            L.circle([lat, lng], {
+                radius: 700,
+                color: '#10b981',
+                fillColor: '#10b981',
+                fillOpacity: 0.07,
+                weight: 2,
+                dashArray: '8, 6'
+            }).addTo(map);
+        });
+    </script>
 
     <!-- Theme Toggle Script -->
     <script>

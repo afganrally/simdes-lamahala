@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -49,20 +49,65 @@
             letter-spacing: -0.025em;
         }
 
-        /* Hero gradient background */
-        .hero-gradient {
-            background: linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
-            background-size: 400% 400%;
-            background-position: 0% 50%;
+        /* Hero Slideshow */
+        .hero-slideshow {
             position: relative;
+            height: 420px;
+            overflow: hidden;
         }
-
-        .hero-gradient::before {
-            content: '';
+        .hero-slide {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(13, 148, 136, 0.4) 0%, rgba(5, 150, 105, 0.3) 50%, rgba(8, 145, 178, 0.4) 100%);
-            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 1.2s ease-in-out, transform 6s ease-in-out;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,20,20,0.6) 60%, rgba(0,40,30,0.8) 100%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        .hero-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.45);
+            border: 2px solid rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hero-dot.active { background: #fff; width: 24px; border-radius: 6px; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
         }
     </style>
 </head>
@@ -113,24 +158,35 @@
         </div>
     </header>
 
-    <!-- Hero -->
-    <section class="hero-gradient relative overflow-hidden py-20">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="absolute top-40 left-40 w-64 h-64 bg-white/10 rounded-full blur-2xl"></div>
-            <div class="absolute bottom-20 right-20 w-48 h-48 bg-white/10 rounded-full blur-xl"></div>
-        </div>
-
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
-                <svg class="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v6a2 2 0 00-2 2h3a2 2 0 00-2 2v14l-2 2h2a2 2 0 012 2v1m2 13a2 2 0 01-2 2V7m2 13a2 2 0 002-2V9a2 2 0 00-2 2zm-2 0a2 2 0 012 2h2a2 2 0 012 2 6-2 6-2 0 00-2 2v14a2 2 0 012 2 6-2 6-2 0 00-2zm0 0a2 2 0 012 2h2a2 2 0 01-2 2V7m2 13a2 2 0 01-2 2.828 2 0 00-2 2z"></path>
-                </svg>
-                <span class="ml-3 text-lg font-semibold text-emerald-900">Data Penduduk</span>
+    <!-- Hero Section - Slideshow -->
+    <section class="hero-slideshow">
+        <div class="hero-slide active" style="background-image:url('{{ asset('img/hero1.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero2.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero3.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero4.jpeg') }}')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Data Penduduk
             </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Statistik Demografi Desa</h2>
-            <p class="text-xl text-white/90 max-w-2xl mx-auto">Informasi kependudukan dan data statistik penduduk secara real-time</p>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg" style="text-shadow:0 2px 20px rgba(0,0,0,0.4)">Statistik Demografi Desa</h2>
+            <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 drop-shadow" style="text-shadow:0 1px 10px rgba(0,0,0,0.4)">Informasi kependudukan dan data statistik penduduk secara real-time</p>
+            <div class="flex items-center gap-2">
+                <button class="hero-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+                <button class="hero-dot"        onclick="goToSlide(1)" aria-label="Slide 2"></button>
+                <button class="hero-dot"        onclick="goToSlide(2)" aria-label="Slide 3"></button>
+                <button class="hero-dot"        onclick="goToSlide(3)" aria-label="Slide 4"></button>
+            </div>
+        </div>
+        <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all" aria-label="Previous">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all" aria-label="Next">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+            <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </div>
     </section>
 
@@ -698,6 +754,28 @@
         </div>
     </footer>
 
+    
+    <!-- Hero Slideshow Script -->
+    <script>
+        var heroCurrentSlide = 0;
+        var heroTotal = 4;
+        var heroTimer = null;
+        function goToSlide(index) {
+            var slides = document.querySelectorAll('.hero-slide');
+            var dots   = document.querySelectorAll('.hero-dot');
+            slides[heroCurrentSlide].classList.remove('active');
+            dots[heroCurrentSlide].classList.remove('active');
+            heroCurrentSlide = (index + heroTotal) % heroTotal;
+            slides[heroCurrentSlide].classList.add('active');
+            dots[heroCurrentSlide].classList.add('active');
+        }
+        function changeSlide(dir) { goToSlide(heroCurrentSlide + dir); resetTimer(); }
+        function resetTimer() {
+            clearInterval(heroTimer);
+            heroTimer = setInterval(function() { goToSlide(heroCurrentSlide + 1); }, 5000);
+        }
+        document.addEventListener('DOMContentLoaded', function() { resetTimer(); });
+    </script>
     @livewireScripts
     <script>
         document.addEventListener('DOMContentLoaded', function() {

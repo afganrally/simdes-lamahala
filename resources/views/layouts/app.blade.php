@@ -21,11 +21,46 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+
+    <style>
+        /* Efek hover untuk semua tombol dan elemen yang bisa diklik */
+        button:not(:disabled), 
+        input[type="submit"]:not(:disabled), 
+        input[type="button"]:not(:disabled) {
+            cursor: pointer;
+            transition: filter 0.2s ease, transform 0.1s ease;
+        }
+        
+        button:hover:not(:disabled), 
+        input[type="submit"]:hover:not(:disabled), 
+        input[type="button"]:hover:not(:disabled) {
+            filter: brightness(0.95);
+            transform: translateY(-1px);
+        }
+        
+        button:active:not(:disabled), 
+        input[type="submit"]:active:not(:disabled), 
+        input[type="button"]:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* Efek cursor loading global */
+        .global-loading-cursor, .global-loading-cursor * {
+            cursor: wait !important;
+        }
+        
+        .btn-loading {
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: wait !important;
+        }
+    </style>
 </head>
 
 <body class="antialiased">
     <div class="flex h-screen bg-neutral-50 dark:bg-neutral-900">
         <!-- Sidebar -->
+        @if (Auth::user()->role !== 'kepala_desa')
         <aside
             class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700">
             <!-- Sidebar Header -->
@@ -33,9 +68,9 @@
                 <!-- Logo -->
                 <div class="flex flex-col items-center flex-shrink-0 px-4 mb-8">
                     <h1 class="text-xl font-bold text-neutral-900 dark:text-white mb-3">
-                        SIMDES {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'Laravel') }}
                     </h1>
-                    <div class="h-16 w-16 rounded-lg flex items-center justify-center overflow-hidden">
+                    <div class="h-[150px] w-[150px] rounded-lg flex items-center justify-center overflow-hidden">
                         <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="h-full w-full object-cover">
                     </div>
                 </div>
@@ -160,9 +195,10 @@
 
             </div>
         </aside>
+        @endif
 
         <!-- Main Content Area -->
-        <div class="lg:pl-64 flex flex-col flex-1">
+        <div class="{{ Auth::user()->role !== 'kepala_desa' ? 'lg:pl-64' : '' }} flex flex-col flex-1">
             <!-- Top Bar -->
             <header class="bg-white dark:bg-neutral-800 shadow-sm border-b border-neutral-200 dark:border-neutral-700">
                 <div class="px-4 sm:px-6 lg:px-8 py-4">
@@ -310,6 +346,62 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-</body>
+    <!-- Global Loading State Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle form submissions
+            document.body.addEventListener('submit', function(e) {
+                const submitBtn = e.target.querySelector('button[type="submit"], input[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.classList.add('btn-loading');
+                    // Add spinner
+                    if (!submitBtn.innerHTML.includes('animate-spin')) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.setAttribute('data-original', originalText);
+                        submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>${originalText}`;
+                    }
+                }
+            });
 
+            // Handle regular link clicks
+            document.body.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link && link.href && !link.href.startsWith('javascript:') && !link.getAttribute('href').startsWith('#') && !link.hasAttribute('wire:navigate')) {
+                    if (link.target !== '_blank' && !e.ctrlKey && !e.metaKey) {
+                        document.body.classList.add('global-loading-cursor');
+                        setTimeout(() => document.body.classList.remove('global-loading-cursor'), 5000); // fallback timeout
+                    }
+                }
+            });
+        });
+
+        // Handle Livewire 3 global loading
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('commit', ({ succeed, fail }) => {
+                document.body.classList.add('global-loading-cursor');
+                succeed(() => document.body.classList.remove('global-loading-cursor'));
+                fail(() => document.body.classList.remove('global-loading-cursor'));
+            });
+        });
+
+        // Handle Livewire SPA navigation (wire:navigate)
+        document.addEventListener('livewire:navigating', () => {
+            document.body.classList.add('global-loading-cursor');
+        });
+        document.addEventListener('livewire:navigated', () => {
+            document.body.classList.remove('global-loading-cursor');
+        });
+
+        // Handle generic page load completed / back button
+        window.addEventListener('pageshow', () => {
+            document.body.classList.remove('global-loading-cursor');
+            document.querySelectorAll('.btn-loading').forEach(btn => {
+                btn.classList.remove('btn-loading');
+                if (btn.hasAttribute('data-original')) {
+                    btn.innerHTML = btn.getAttribute('data-original');
+                }
+            });
+        });
+    </script>
+</body>
 </html>

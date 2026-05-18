@@ -141,7 +141,7 @@
                             wire:key="fasilitas-{{ $item->id }}">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if ($item->gambar)
-                                    <img src="{{ Storage::url($item->gambar) }}" alt="{{ $item->nama }}"
+                                    <img src="/storage/{{ $item->gambar }}" alt="{{ $item->nama }}"
                                         class="h-12 w-12 rounded-lg object-cover">
                                 @else
                                     <div
@@ -484,11 +484,11 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
-                                @if ($isEdit && $oldGambar)
+                                                                @if ($isEdit && $oldGambar)
                                     <div class="mt-3">
                                         <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-2">Gambar saat ini:
                                         </p>
-                                        <img src="{{ Storage::url($oldGambar) }}" alt="Current image"
+                                        <img src="/storage/{{ $oldGambar }}" alt="Current image"
                                             class="h-20 w-20 rounded-lg object-cover">
                                     </div>
                                 @endif

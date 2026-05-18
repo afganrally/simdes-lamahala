@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -20,17 +20,41 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
 
-        .hero-gradient {
-            background: linear-gradient(-45deg, #0d9488, #059669, #0891b2, #06b6d4);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+        /* Hero Slideshow */
+        .hero-slideshow {
+            position: relative;
+            height: 420px;
+            overflow: hidden;
         }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 1.2s ease-in-out, transform 6s ease-in-out;
         }
+        .hero-slide.active { opacity: 1; transform: scale(1); }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,20,20,0.6) 60%, rgba(0,40,30,0.8) 100%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        .hero-dot { width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.45);border:2px solid rgba(255,255,255,0.6);cursor:pointer;transition:all 0.3s; }
+        .hero-dot.active { background:#fff;width:24px;border-radius:6px; }
+        .hero-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:12px;font-weight:600;padding:6px 16px;border-radius:999px;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:16px; }
     </style>
 </head>
 <body class="antialiased bg-gradient-to-br from-slate-50 via-neutral-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-950 min-h-screen">
@@ -80,11 +104,32 @@
         </div>
     </header>
 
-    <!-- Hero -->
-    <section class="hero-gradient py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <h2 class="text-4xl font-bold text-white mb-4">Bantuan Sosial</h2>
-            <p class="text-xl text-emerald-100">Informasi penyaluran bantuan sosial di desa</p>
+    <!-- Hero Section - Slideshow -->
+    <section class="hero-slideshow">
+        <div class="hero-slide active" style="background-image:url('{{ asset('img/hero1.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero2.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero3.jpeg') }}')"></div>
+        <div class="hero-slide"        style="background-image:url('{{ asset('img/hero4.jpeg') }}')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Bantuan Sosial</div>
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg" style="text-shadow:0 2px 20px rgba(0,0,0,0.4)">Bantuan Sosial</h2>
+            <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 drop-shadow" style="text-shadow:0 1px 10px rgba(0,0,0,0.4)">Informasi penyaluran bantuan sosial bagi warga Desa Lamahala Jaya</p>
+            <div class="flex items-center gap-2">
+                <button class="hero-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+                <button class="hero-dot"        onclick="goToSlide(1)" aria-label="Slide 2"></button>
+                <button class="hero-dot"        onclick="goToSlide(2)" aria-label="Slide 3"></button>
+                <button class="hero-dot"        onclick="goToSlide(3)" aria-label="Slide 4"></button>
+            </div>
+        </div>
+        <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all" aria-label="Previous">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button onclick="changeSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all" aria-label="Next">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+            <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </div>
     </section>
 
@@ -192,10 +237,25 @@
     <!-- Footer -->
     <footer class="bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700 mt-16 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-600 dark:text-neutral-400">
-            <p>&copy; {{ date('Y') }} {{ config('app.name', 'SIMDESA') }}. Dibuat dengan ❤️ untuk kemajuan desa</p>
+            <p>&copy; {{ date('Y') }} {{ config('app.name', 'SIMDESA') }}. Dibuat dengan â¤ï¸ untuk kemajuan desa</p>
         </div>
     </footer>
 
+    
+    <!-- Hero Slideshow Script -->
+    <script>
+        var heroCurrentSlide = 0, heroTotal = 4, heroTimer = null;
+        function goToSlide(i) {
+            document.querySelectorAll(".hero-slide")[heroCurrentSlide].classList.remove("active");
+            document.querySelectorAll(".hero-dot")[heroCurrentSlide].classList.remove("active");
+            heroCurrentSlide = (i + heroTotal) % heroTotal;
+            document.querySelectorAll(".hero-slide")[heroCurrentSlide].classList.add("active");
+            document.querySelectorAll(".hero-dot")[heroCurrentSlide].classList.add("active");
+        }
+        function changeSlide(d) { goToSlide(heroCurrentSlide + d); resetTimer(); }
+        function resetTimer() { clearInterval(heroTimer); heroTimer = setInterval(function(){ goToSlide(heroCurrentSlide+1); }, 5000); }
+        document.addEventListener("DOMContentLoaded", function(){ resetTimer(); });
+    </script>
     @livewireScripts
     <script>
         document.addEventListener('DOMContentLoaded', function() {

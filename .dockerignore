@@ -1,0 +1,17 @@
+/node_modules
+/vendor
+/.git
+/.github
+/.vscode
+/.idea
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+.env
+.env.example
+docker-compose.yml
+Dockerfile
+.dockerignore
+db_simdes_lamahala.sql
+Proposal Nisrina Uswtun Nisa fix.pdf
