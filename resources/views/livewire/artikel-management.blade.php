@@ -218,6 +218,62 @@
                                 @enderror
                             </div>
 
+                            <!-- Gambar Cover -->
+                            <div class="md:col-span-2">
+                                <label
+                                    class="flex items-center text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    Gambar Cover Artikel
+                                </label>
+                                <div class="mt-1 flex items-center gap-6">
+                                    <!-- Image Preview -->
+                                    <div class="flex-shrink-0">
+                                        @if ($gambar)
+                                            <div class="relative">
+                                                <img src="{{ $gambar->temporaryUrl() }}" alt="Preview" class="h-28 w-44 object-cover rounded-lg border border-neutral-300 dark:border-neutral-700 shadow-sm">
+                                                <button type="button" wire:click="$set('gambar', null)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 focus:outline-none" title="Hapus Pilihan">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        @elseif ($oldGambar)
+                                            <div class="relative">
+                                                <img src="{{ asset('storage/' . $oldGambar) }}" alt="Current image" class="h-28 w-44 object-cover rounded-lg border border-neutral-300 dark:border-neutral-700 shadow-sm">
+                                            </div>
+                                        @else
+                                            <div class="h-28 w-44 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center border border-dashed border-neutral-300 dark:border-neutral-700">
+                                                <svg class="h-10 w-10 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <!-- Upload Input & Helper -->
+                                    <div class="flex-grow">
+                                        <input type="file" wire:model="gambar" id="gambar-input" class="hidden" accept="image/*">
+                                        <label for="gambar-input" class="cursor-pointer inline-flex items-center px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md shadow-sm text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-600 focus:outline-none">
+                                            <svg class="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                            </svg>
+                                            Pilih File Gambar
+                                        </label>
+                                        <span wire:loading wire:target="gambar" class="ml-3 text-sm text-neutral-500">
+                                            <span class="inline-block animate-spin mr-1">⌛</span> Mengunggah...
+                                        </span>
+                                        <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-2">Format: JPG, JPEG, PNG, WEBP, GIF (Maks. 2MB)</p>
+                                    </div>
+                                </div>
+                                @error('gambar')
+                                    <div class="mt-1 text-red-500 text-sm">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <!-- Isi -->
                             <div class="md:col-span-2">
                                 <label
@@ -230,7 +286,7 @@
                                     </svg>
                                     Isi Artikel <span class="text-red-500">*</span>
                                 </label>
-                                <div class="wysiwyg-editor-wrapper">
+                                <div class="wysiwyg-editor-wrapper" wire:ignore>
                                     <textarea id="wysiwyg-editor" wire:model="isi" class="hidden"></textarea>
                                 </div>
                                 @error('isi')

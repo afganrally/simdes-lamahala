@@ -18,6 +18,7 @@ class WysiwygEditor {
         };
         this.isDestroyed = false;
         this.syncTimer = null;
+        this.savedRange = null;
     }
 
     /**
@@ -214,6 +215,7 @@ class WysiwygEditor {
         // Sync on input
         this.editorPane.addEventListener('input', () => {
             this.debouncedSync();
+            this.saveSelection();
         });
 
         // Keyboard shortcuts
@@ -230,31 +232,77 @@ class WysiwygEditor {
                 ALLOWED_ATTR: ['href', 'title']
             });
             document.execCommand('insertHTML', false, cleanText);
+            this.saveSelection();
         });
+
+        // Track kursor / pilihan teks agar kursor tidak hilang saat membuka modal
+        this.editorPane.addEventListener('keyup', () => this.saveSelection());
+        this.editorPane.addEventListener('click', () => this.saveSelection());
+        this.editorPane.addEventListener('focus', () => this.saveSelection());
+        this.editorPane.addEventListener('blur', () => this.saveSelection());
+    }
+
+    /**
+     * Menyimpan pilihan (range) kursor saat ini
+     */
+    saveSelection() {
+        const sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            const range = sel.getRangeAt(0);
+            // Pastikan selection berada di dalam panel editor
+            if (this.editorPane.contains(range.commonAncestorContainer)) {
+                this.savedRange = range;
+            }
+        }
+    }
+
+    /**
+     * Mengembalikan pilihan (range) kursor ke posisi tersimpan
+     */
+    restoreSelection() {
+        const sel = window.getSelection();
+        if (this.savedRange) {
+            sel.removeAllRanges();
+            sel.addRange(this.savedRange);
+        } else {
+            // Jika tidak ada range tersimpan, posisikan di akhir konten editor
+            this.editorPane.focus();
+            const range = document.createRange();
+            range.selectNodeContents(this.editorPane);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
     }
 
     /**
      * Handle toolbar button actions
      */
     handleToolbarAction(action, value = null) {
+        this.restoreSelection();
         this.editorPane.focus();
 
         switch (action) {
             case 'createLink':
                 const url = prompt('Masukkan URL:', 'https://');
                 if (url) {
+                    this.restoreSelection();
                     document.execCommand('createLink', false, url);
+                    this.saveSelection();
                 }
                 break;
             case 'insertImage':
+                this.saveSelection();
                 // Trigger file input click
                 this.imageInput.click();
                 return; // Don't sync yet, wait for upload
             case 'formatBlock':
                 document.execCommand(action, false, `<${value}>`);
+                this.saveSelection();
                 break;
             default:
                 document.execCommand(action, false, value);
+                this.saveSelection();
         }
 
         this.syncToLivewire();
@@ -584,8 +632,10 @@ class WysiwygEditor {
 
             imgHtml += '>';
 
-            // Insert image into editor
+            // Restore selection and insert image into editor
+            this.restoreSelection();
             document.execCommand('insertHTML', false, imgHtml);
+            this.saveSelection();
             this.syncToLivewire();
 
             // Close modal

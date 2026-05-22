@@ -133,7 +133,7 @@ class BansosManagement extends Component
         Bansos::updateOrCreate(['id' => $this->bansos_id], $data);
 
         $message = $this->bansos_id ? 'Data Bansos berhasil diperbarui!' : 'Data Bansos berhasil ditambahkan!';
-        $this->dispatch('success', ['message' => $message]);
+        $this->dispatch('success', $message);
 
         $this->closeModal();
     }
@@ -181,6 +181,6 @@ class BansosManagement extends Component
         }
         $bansos->delete();
 
-        $this->dispatch('success', ['message' => 'Data Bansos berhasil dihapus!']);
+        $this->dispatch('success', 'Data Bansos berhasil dihapus!');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use Livewire\Component;
 
-trait SweetAlert
+trait DispatchSweetAlert
 {
     /**
      * Dispatch SweetAlert success
